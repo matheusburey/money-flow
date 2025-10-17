@@ -6,7 +6,9 @@
     >
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
-          <LogoUi />
+          <NuxtLink to="/">
+            <LogoUi />
+          </NuxtLink>
           <div class="flex items-center space-x-3">
             <NuxtLink
               to="/auth/signin"
