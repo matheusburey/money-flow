@@ -47,86 +47,89 @@ export const createDefaultCategories = async (
 ): Promise<void> => {
   await prisma.category.createMany({
     data: [
+      // ===== EXPENSE =====
       {
         name: "Saúde",
-        color: "#FFCDD2",
+        color: "#FF8A80", // vermelho suave (urgência / saúde)
         icon: "HealthAndSafety",
         userId,
         type: "expense",
       },
       {
         name: "Lazer",
-        color: "#FFCDD2",
+        color: "#FFCC80", // laranja suave (diversão)
         icon: "Restaurant",
         userId,
         type: "expense",
       },
       {
         name: "Casa",
-        color: "#C8E6C9",
+        color: "#A5D6A7", // verde suave (lar, natureza)
         icon: "House",
         userId,
         type: "expense",
       },
       {
         name: "Transporte",
-        color: "#B3E5FC",
+        color: "#81D4FA", // azul claro (mobilidade)
         icon: "Bus",
         userId,
         type: "expense",
       },
       {
         name: "Entretenimento",
-        color: "#FFCDD2",
+        color: "#CE93D8", // roxo suave (diversão)
         icon: "Movie",
         userId,
         type: "expense",
       },
       {
         name: "Educação",
-        color: "#FFCDD2",
+        color: "#FFF59D", // amarelo suave (conhecimento)
         icon: "GraduationCap",
         userId,
         type: "expense",
       },
       {
         name: "Presente",
-        color: "#FFCDD2",
+        color: "#F48FB1", // rosa suave (carinho)
         icon: "Gift",
         userId,
         type: "expense",
       },
+
+      // ===== INCOME =====
       {
         name: "Salário",
-        color: "#FFCDD2",
+        color: "#81C784", // verde confiança
         icon: "Banknote",
         userId,
         type: "income",
       },
       {
         name: "Freelance",
-        color: "#65a30d",
+        color: "#4DB6AC", // verde-água (trabalho flexível)
         icon: "HandCoins",
         userId,
         type: "income",
       },
       {
         name: "Presente",
-        color: "#FFCDD2",
+        color: "#A5D6A7", // verde claro (entrada positiva)
         icon: "Gift",
         userId,
         type: "income",
       },
       {
         name: "Juros",
-        color: "#FFCDD2",
+        color: "#90CAF9", // azul claro (finanças / bancos)
         icon: "Coins",
         userId,
         type: "income",
       },
       {
         name: "Outros",
-        color: "#FFCDD2",
+        color: "#B39DDB", // roxo suave (categoria neutra)
         icon: "PiggyBank",
         userId,
         type: "income",

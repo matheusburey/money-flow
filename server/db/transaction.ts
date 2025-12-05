@@ -10,7 +10,6 @@ export const getRecentTransactions = async (userId: string, gte: Date) => {
       },
     },
     orderBy: { date: "desc" },
-    take: 10,
     select: {
       id: true,
       amount: true,
