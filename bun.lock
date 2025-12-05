@@ -1,5 +1,6 @@
 {
   "lockfileVersion": 1,
+  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "nuxt-app",
@@ -8,7 +9,6 @@
         "@tailwindcss/vite": "^4.1.13",
         "bcryptjs": "^3.0.2",
         "chart.js": "^4.5.0",
-        "izitoast": "^1.4.0",
         "jsonwebtoken": "^9.0.2",
         "lucide-vue-next": "^0.543.0",
         "nuxt": "^4.1.1",
