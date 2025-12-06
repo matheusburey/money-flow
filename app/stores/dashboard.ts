@@ -1,4 +1,5 @@
-import { acceptHMRUpdate, defineStore } from "pinia";
+import { defineStore } from "pinia";
+import { ref, computed } from "vue";
 
 interface Account {
   id: string;
@@ -59,60 +60,67 @@ interface DashboardData {
   transactionsType: TransactionType;
 }
 
-interface DashboardState {
-  accounts: Account[];
-  recentTransactions: RecentTransactions[];
-  summary: Summary;
-  categories: Category[];
-  transactionsType: TransactionType;
-  loading: boolean;
-  error: string | null;
-}
+export const useDashboardStore = defineStore("dashboard", () => {
+  const accounts = ref([] as Account[]);
+  const recentTransactions = ref([] as RecentTransactions[]);
+  const summary = ref({} as Summary);
+  const categories = ref([] as Category[]);
+  const transactionsType = ref({} as TransactionType);
+  const loading = ref(true);
+  const error = ref<string | null>(null);
 
-export const useDashboardStore = defineStore("dashboard", {
-  state: (): DashboardState => ({
-    accounts: [],
-    recentTransactions: [],
-    summary: {} as Summary,
-    categories: [],
-    transactionsType: {} as TransactionType,
-    loading: true,
-    error: null,
-  }),
+  const getCategories = computed(() => (categoryType?: string | null) => {
+    if (!categoryType) return categories.value;
+    return categories.value.filter(
+      (category) => category.type === categoryType
+    );
+  });
 
-  actions: {
-    async fetchDashboardData(token: string) {
-      try {
-        this.loading = true;
-        this.fetchDashboard(token);
-        this.fetchCategories(token);
-      } catch (error: any) {
-        console.error("Error fetching dashboard data:", error);
-        this.error = error.message || "Erro ao buscar dados do dashboard";
-      }
-      this.loading = false;
-    },
-    async fetchDashboard(token: string) {
-      const response: DashboardData = await $fetch("/api/dashboard", {
+  async function fetchDashboardData(token: string) {
+    try {
+      loading.value = true;
+      await fetchDashboard(token);
+      await fetchCategories(token);
+    } catch (error: any) {
+      console.error("Error fetching dashboard data:", error);
+      error.value = error.message || "Erro ao buscar dados do dashboard";
+    }
+    loading.value = false;
+  }
+  async function fetchDashboard(token: string) {
+    const response: DashboardData = await $fetch("/api/dashboard", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    accounts.value = response.accounts;
+    recentTransactions.value = response.recentTransactions;
+    summary.value = response.summary;
+    transactionsType.value = response.transactionsType;
+  }
+  async function fetchCategories(token: string) {
+    const response: { categories: Category[] } = await $fetch(
+      "/api/categories",
+      {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      });
-      this.accounts = response.accounts;
-      this.recentTransactions = response.recentTransactions;
-      this.summary = response.summary;
-      this.transactionsType = response.transactionsType;
-    },
-    async fetchCategories(token: string) {
-      const response: { categories: Category[] } = await $fetch(
-        "/api/categories",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      this.categories = response.categories;
-    },
-  },
+      }
+    );
+    categories.value = response.categories;
+  }
+
+  return {
+    accounts,
+    recentTransactions,
+    summary,
+    categories,
+    transactionsType,
+    loading,
+    error,
+
+    getCategories,
+
+    fetchDashboardData,
+  };
 });

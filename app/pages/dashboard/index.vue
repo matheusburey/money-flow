@@ -1,11 +1,8 @@
 <template>
   <div class="h-full bg-gray-50 p-4 md:p-8">
     <!-- Transaction Form Modal -->
-    <TransactionFormModal
-      :is-open="isTransactionModalOpen"
-      @close="closeTransactionModal"
-      @submit="handleTransactionSubmit"
-    />
+    <TransactionFormModal :is-open="isTransactionModalOpen" @close="closeTransactionModal" @refreshDashboardData=""
+      refreshDashboardData />
     <div class="absolute bottom-6 right-6">
       <ButtonUi @click="openTransactionModal" variant="icon">
         <Plus class="h-6 w-6 text-blue-500" />
@@ -14,30 +11,14 @@
 
     <!-- Balance Card -->
     <div class="grid grid-cols-4 gap-6 mb-6">
-      <BalanceCard
-        :value="summary?.totalBalance || 0"
-        :icon="Landmark"
-        label="Saldo atual"
-        color="text-blue-500"
-      />
-      <BalanceCard
-        :value="summary?.totalIncome || 0"
-        :icon="TrendingUp"
-        label="Receita"
-        color="text-green-500"
-      />
-      <BalanceCard
-        :value="summary?.totalExpenses || 0"
-        :icon="TrendingDown"
-        label="Despesas"
-        color="text-red-500"
-      />
-      <BalanceCard
-        :value="summary?.totalCredit || 0"
-        :icon="CreditCard"
-        label="Cartões"
-        color="text-yellow-500"
-      />
+      <BalanceCard :value="dashboard.summary?.totalBalance || 0" :icon="Landmark" label="Saldo atual"
+        color="text-blue-500" />
+      <BalanceCard :value="dashboard.summary?.totalIncome || 0" :icon="TrendingUp" label="Receita"
+        color="text-green-500" />
+      <BalanceCard :value="dashboard.summary?.totalExpenses || 0" :icon="TrendingDown" label="Despesas"
+        color="text-red-500" />
+      <BalanceCard :value="dashboard.summary?.totalCredit || 0" :icon="CreditCard" label="Cartões"
+        color="text-yellow-500" />
     </div>
 
     <!-- Doughnut Chart -->
@@ -68,17 +49,11 @@
       </div>
 
       <div class="space-y-4">
-        <div v-if="recentTransactions">
-          <div
-            v-for="transaction in recentTransactions"
-            :key="transaction.id"
-            class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors"
-          >
+        <div v-if="dashboard.recentTransactions">
+          <div v-for="transaction in dashboard.recentTransactions" :key="transaction.id"
+            class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors">
             <div class="flex items-center">
-              <div
-                class="p-3 rounded-full text-white"
-                :style="{ backgroundColor: transaction.category.color }"
-              >
+              <div class="p-3 rounded-full text-white" :style="{ backgroundColor: transaction.category.color }">
                 <component :is="getIcon(transaction?.category?.icon)" />
               </div>
               <div class="ml-4">
@@ -91,10 +66,7 @@
                 </p>
               </div>
             </div>
-            <div
-              class="font-medium"
-              :style="{ color: transaction.category.color }"
-            >
+            <div class="font-medium" :style="{ color: transaction.category.color }">
               {{ transaction.type === "expense" ? "-" : "+" }}
               {{ formatCurrency(transaction.amount) }}
             </div>
@@ -107,8 +79,7 @@
 
       <button
         class="mt-4 w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-gray-400 hover:text-gray-600 transition-colors flex items-center justify-center"
-        @click="openTransactionModal"
-      >
+        @click="openTransactionModal">
         <Plus class="h-5 w-5 mr-2" />
         Adicionar Transação
       </button>
@@ -137,19 +108,13 @@ definePageMeta({
 });
 
 const authStore = useAuthStore();
-const {
-  categories,
-  accounts,
-  summary,
-  transactionsType,
-  recentTransactions,
-  fetchDashboardData,
-} = useDashboardStore();
+const dashboard = useDashboardStore();
 
 const isTransactionModalOpen = ref(false);
 
 const chartDataIncome = computed(() => {
-  const income = transactionsType?.income || [];
+  const income = dashboard.transactionsType.income || [];
+  console.log(income);
   return {
     labels: income.map((t) => t.categoryName),
     datasets: [
@@ -162,7 +127,7 @@ const chartDataIncome = computed(() => {
 });
 
 const chartDataExpense = computed(() => {
-  const expense = transactionsType?.expense || [];
+  const expense = dashboard.transactionsType?.expense || [];
   return {
     labels: expense.map((t) => t.categoryName),
     datasets: [
@@ -200,17 +165,17 @@ const handleTransactionSubmit = async (transactionData: any) => {
     });
 
     // Refresh dashboard data
-    await fetchDashboardData(token!);
+    await dashboard.fetchDashboardData(token!);
     closeTransactionModal();
   } catch (error) {
     console.error("Error creating transaction:", error);
   }
 };
 
-onMounted(async () => {
+async function refreshDashboardData() {
   const token = await authStore.getToken();
-  await fetchDashboardData(token!);
-});
+  await dashboard.fetchDashboardData(token!);
+}
 
 function getIcon(icon: string) {
   const key = icon as keyof typeof icons;
@@ -224,6 +189,8 @@ function formatCurrency(value: number) {
     currency: "BRL",
   });
 }
+
+onMounted(refreshDashboardData);
 
 const options = {
   responsive: true,
