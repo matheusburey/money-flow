@@ -1,8 +1,7 @@
 <template>
-  <div class="h-full bg-gray-50 p-4 md:p-8">
+  <div>
     <!-- Transaction Form Modal -->
-    <TransactionFormModal :is-open="isTransactionModalOpen" @close="closeTransactionModal" @refreshDashboardData=""
-      refreshDashboardData />
+    <TransactionFormModal :is-open="isTransactionModalOpen" @close="closeTransactionModal" @refreshDashboardData="refreshDashboardData" />
     <div class="absolute bottom-6 right-6">
       <ButtonUi @click="openTransactionModal" variant="icon">
         <Plus class="h-6 w-6 text-blue-500" />
@@ -42,7 +41,7 @@
     </div>
 
     <!-- Recent Transactions -->
-    <div class="bg-white rounded-2xl shadow-md p-6">
+    <div class="rounded-2xl shadow-md p-6">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-lg font-semibold text-gray-800">Transações Recentes</h2>
         <button class="text-blue-500 text-sm font-medium">Ver Todas</button>
@@ -104,7 +103,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 definePageMeta({
   title: "Dashboard",
-  layout: "dashboard-default",
+  layout: "default-layout",
 });
 
 const authStore = useAuthStore();
@@ -145,31 +144,6 @@ const openTransactionModal = () => {
 
 const closeTransactionModal = () => {
   isTransactionModalOpen.value = false;
-};
-
-const handleTransactionSubmit = async (transactionData: any) => {
-  try {
-    const token = await authStore.getToken();
-    const payload = {
-      ...transactionData,
-      amount: Math.round(parseFloat(transactionData.amount) * 100), // Convert to cents
-      date: new Date(transactionData.date).toISOString(),
-    };
-    await $fetch("/api/transaction", {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    // Refresh dashboard data
-    await dashboard.fetchDashboardData(token!);
-    closeTransactionModal();
-  } catch (error) {
-    console.error("Error creating transaction:", error);
-  }
 };
 
 async function refreshDashboardData() {

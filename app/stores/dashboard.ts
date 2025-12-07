@@ -14,7 +14,7 @@ interface RecentTransactions {
   id: string;
   amount: number;
   description: string | null;
-  date: Date;
+  date: string;
   type: string;
   category: {
     id: string;
@@ -87,8 +87,9 @@ export const useDashboardStore = defineStore("dashboard", () => {
     }
     loading.value = false;
   }
+
   async function fetchDashboard(token: string) {
-    const response: DashboardData = await $fetch("/api/dashboard", {
+    const response = await $fetch<DashboardData>("/api/dashboard", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -98,8 +99,9 @@ export const useDashboardStore = defineStore("dashboard", () => {
     summary.value = response.summary;
     transactionsType.value = response.transactionsType;
   }
+
   async function fetchCategories(token: string) {
-    const response: { categories: Category[] } = await $fetch(
+    const response = await $fetch<{ categories: Category[] }>(
       "/api/categories",
       {
         headers: {
