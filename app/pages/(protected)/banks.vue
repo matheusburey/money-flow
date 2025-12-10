@@ -1,18 +1,28 @@
 <template>
   <div>
+    <BankFormModal :is-open="isTransactionModalOpen" @close="closeBank" />
     <div class="space-y-4">
       <div v-if="dashboard.accounts.length">
-        <div v-for="account in dashboard.accounts" :key="account.id"
-          class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors">
+        <div
+          v-for="account in dashboard.accounts"
+          :key="account.id"
+          class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors"
+        >
           <div class="flex items-center">
-            <div class="p-3 rounded-full text-white" :style="{ backgroundColor: account.color }">
+            <div
+              class="p-3 rounded-full text-white"
+              :style="{ backgroundColor: account.color }"
+            >
               <component :is="getIcon(account?.icon)" />
             </div>
             <h3 class="ml-4 font-medium text-gray-800">
               {{ account?.name || "Sem descrição" }}
             </h3>
           </div>
-          <div class="font-medium" :style="{ color: account.balance > 0 ? account.color : 'red' }">
+          <div
+            class="font-medium"
+            :style="{ color: account.balance > 0 ? account.color : 'red' }"
+          >
             {{ formatCurrency(account.balance, account.currency) }}
           </div>
         </div>
@@ -24,7 +34,8 @@
 
     <button
       class="mt-4 w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-gray-400 hover:text-gray-600 transition-colors flex items-center justify-center"
-      @click="openBank">
+      @click="openBank"
+    >
       <Plus class="h-5 w-5 mr-2" />
       Adicionar Banco
     </button>
@@ -32,24 +43,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { 
-  ShoppingBag, 
-  Home, 
-  Truck, 
-  Cake, 
-  Gift,
-  Plus,
-  MoreVertical,
-  Wallet,
-  BarChart3,
-  Settings
-} from 'lucide-vue-next';
+import { ref } from "vue";
+import { Plus } from "lucide-vue-next";
 
 definePageMeta({
-  title: 'Bancos',
-  layout: 'default-layout'
-})
+  title: "Bancos",
+  layout: "default-layout",
+});
 
 const authStore = useAuthStore();
 const dashboard = useDashboardStore();
@@ -81,7 +81,7 @@ const closeBank = () => {
 
 async function refreshDashboardData() {
   const token = await authStore.getToken();
-  await dashboard.fetchDashboardData(token!);
+  await dashboard.fetchBankAccount(token!);
 }
 
 onMounted(refreshDashboardData);

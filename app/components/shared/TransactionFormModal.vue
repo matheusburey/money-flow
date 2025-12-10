@@ -205,4 +205,11 @@ const handleSubmit = async () => {
 
   isSubmitting.value = false;
 };
+
+async function getCategories() {
+  const token = await authStore.getToken();
+  await dashboard.fetchCategories(token!);
+}
+
+onMounted(getCategories);
 </script>

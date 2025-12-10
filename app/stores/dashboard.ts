@@ -1,3 +1,4 @@
+import type { BankAccount } from "@prisma/client";
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 
@@ -79,8 +80,19 @@ export const useDashboardStore = defineStore("dashboard", () => {
   async function fetchDashboardData(token: string) {
     try {
       loading.value = true;
-      await fetchDashboard(token);
-      await fetchCategories(token);
+      const { data } = await useFetch<DashboardData>("/api/dashboard", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!data.value) {
+        return;
+      }
+      const response = data.value;
+      accounts.value = response.accounts;
+      recentTransactions.value = response.recentTransactions;
+      summary.value = response.summary;
+      transactionsType.value = response.transactionsType;
     } catch (error: any) {
       console.error("Error fetching dashboard data:", error);
       error.value = error.message || "Erro ao buscar dados do dashboard";
@@ -88,20 +100,8 @@ export const useDashboardStore = defineStore("dashboard", () => {
     loading.value = false;
   }
 
-  async function fetchDashboard(token: string) {
-    const response = await $fetch<DashboardData>("/api/dashboard", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    accounts.value = response.accounts;
-    recentTransactions.value = response.recentTransactions;
-    summary.value = response.summary;
-    transactionsType.value = response.transactionsType;
-  }
-
   async function fetchCategories(token: string) {
-    const response = await $fetch<{ categories: Category[] }>(
+    const { data } = await useFetch<{ categories: Category[] }>(
       "/api/categories",
       {
         headers: {
@@ -109,7 +109,25 @@ export const useDashboardStore = defineStore("dashboard", () => {
         },
       }
     );
-    categories.value = response.categories;
+
+    if (data.value) {
+      categories.value = data.value.categories;
+    }
+  }
+
+  async function fetchBankAccount(token: string) {
+    const { data } = await useFetch<{ accounts: BankAccount[] }>(
+      "/api/bank-account",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (data.value) {
+      accounts.value = data.value.accounts;
+    }
   }
 
   return {
@@ -124,5 +142,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
     getCategories,
 
     fetchDashboardData,
+    fetchCategories,
+    fetchBankAccount,
   };
 });
