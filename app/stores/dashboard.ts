@@ -3,146 +3,131 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 
 interface Account {
-  id: string;
-  name: string;
-  balance: number;
-  currency: string;
-  color: string;
-  icon: string;
+	id: string;
+	name: string;
+	balance: number;
+	currency: string;
+	color: string;
+	icon: string;
 }
 
 interface RecentTransactions {
-  id: string;
-  amount: number;
-  description: string | null;
-  date: string;
-  type: string;
-  category: {
-    id: string;
-    icon: string;
-    name: string;
-    color: string;
-  };
+	id: string;
+	amount: number;
+	description: string | null;
+	date: string;
+	type: string;
+	category: {
+		id: string;
+		icon: string;
+		name: string;
+		color: string;
+	};
 }
 
 interface Summary {
-  totalBalance: number;
-  totalIncome: number;
-  totalExpenses: number;
-  totalCredit: number;
+	totalBalance: number;
+	totalIncome: number;
+	totalExpenses: number;
+	totalCredit: number;
 }
 
 interface Category {
-  id: string;
-  name: string;
-  description: string;
-  color: string;
-  icon: string;
-  type: string;
+	id: string;
+	name: string;
+	description: string;
+	color: string;
+	icon: string;
+	type: string;
 }
 
 interface TransactionByCategory {
-  categoryId: string;
-  categoryName: string;
-  categoryColor: string;
-  amount: number;
+	categoryId: string;
+	categoryName: string;
+	categoryColor: string;
+	amount: number;
 }
 
 interface TransactionType {
-  income: TransactionByCategory[];
-  expense: TransactionByCategory[];
-  credit: TransactionByCategory[];
+	income: TransactionByCategory[];
+	expense: TransactionByCategory[];
+	credit: TransactionByCategory[];
 }
 
 interface DashboardData {
-  accounts: Account[];
-  recentTransactions: RecentTransactions[];
-  summary: Summary;
-  transactionsType: TransactionType;
+	accounts: Account[];
+	recentTransactions: RecentTransactions[];
+	summary: Summary;
+	transactionsType: TransactionType;
 }
 
 export const useDashboardStore = defineStore("dashboard", () => {
-  const accounts = ref([] as Account[]);
-  const recentTransactions = ref([] as RecentTransactions[]);
-  const summary = ref({} as Summary);
-  const categories = ref([] as Category[]);
-  const transactionsType = ref({} as TransactionType);
-  const loading = ref(true);
-  const error = ref<string | null>(null);
+	const accounts = ref([] as Account[]);
+	const recentTransactions = ref([] as RecentTransactions[]);
+	const summary = ref({} as Summary);
+	const categories = ref([] as Category[]);
+	const transactionsType = ref({} as TransactionType);
+	const loading = ref(true);
+	const error = ref<string | null>(null);
 
-  const getCategories = computed(() => (categoryType?: string | null) => {
-    if (!categoryType) return categories.value;
-    return categories.value.filter(
-      (category) => category.type === categoryType
-    );
-  });
+	const getCategories = computed(() => (categoryType?: string | null) => {
+		if (!categoryType) return categories.value;
+		return categories.value.filter(
+			(category) => category.type === categoryType,
+		);
+	});
 
-  async function fetchDashboardData(token: string) {
-    try {
-      loading.value = true;
-      const { data } = await useFetch<DashboardData>("/api/dashboard", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (!data.value) {
-        return;
-      }
-      const response = data.value;
-      accounts.value = response.accounts;
-      recentTransactions.value = response.recentTransactions;
-      summary.value = response.summary;
-      transactionsType.value = response.transactionsType;
-    } catch (error: any) {
-      console.error("Error fetching dashboard data:", error);
-      error.value = error.message || "Erro ao buscar dados do dashboard";
-    }
-    loading.value = false;
-  }
+	async function fetchDashboardData() {
+		try {
+			loading.value = true;
+			const response = await useApi<DashboardData>("/api/dashboard");
+			if (!response) {
+				return;
+			}
+			accounts.value = response.accounts;
+			recentTransactions.value = response.recentTransactions;
+			summary.value = response.summary;
+			transactionsType.value = response.transactionsType;
+		} catch (error: any) {
+			console.error("Error fetching dashboard data:", error);
+			error.value = error.message || "Erro ao buscar dados do dashboard";
+		}
+		loading.value = false;
+	}
 
-  async function fetchCategories(token: string) {
-    const { data } = await useFetch<{ categories: Category[] }>(
-      "/api/categories",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+	async function fetchCategories() {
+		const response = await useApi<{ categories: Category[] }>(
+			"/api/categories",
+		);
 
-    if (data.value) {
-      categories.value = data.value.categories;
-    }
-  }
+		if (response) {
+			categories.value = response.categories;
+		}
+	}
 
-  async function fetchBankAccount(token: string) {
-    const { data } = await useFetch<{ accounts: BankAccount[] }>(
-      "/api/bank-account",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+	async function fetchBankAccount() {
+		const response = await useApi<{ accounts: BankAccount[] }>(
+			"/api/bank-account",
+		);
 
-    if (data.value) {
-      accounts.value = data.value.accounts;
-    }
-  }
+		if (response) {
+			accounts.value = response.accounts;
+		}
+	}
 
-  return {
-    accounts,
-    recentTransactions,
-    summary,
-    categories,
-    transactionsType,
-    loading,
-    error,
+	return {
+		accounts,
+		recentTransactions,
+		summary,
+		categories,
+		transactionsType,
+		loading,
+		error,
 
-    getCategories,
+		getCategories,
 
-    fetchDashboardData,
-    fetchCategories,
-    fetchBankAccount,
-  };
+		fetchDashboardData,
+		fetchCategories,
+		fetchBankAccount,
+	};
 });

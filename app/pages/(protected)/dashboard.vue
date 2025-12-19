@@ -89,11 +89,11 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import {
-  Plus,
-  TrendingUp,
-  TrendingDown,
-  CreditCard,
-  Landmark,
+	Plus,
+	TrendingUp,
+	TrendingDown,
+	CreditCard,
+	Landmark,
 } from "lucide-vue-next";
 import * as icons from "lucide-vue-next";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
@@ -102,8 +102,8 @@ import { Doughnut } from "vue-chartjs";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 definePageMeta({
-  title: "Dashboard",
-  layout: "default-layout",
+	title: "Dashboard",
+	layout: "default-layout",
 });
 
 const authStore = useAuthStore();
@@ -112,62 +112,61 @@ const dashboard = useDashboardStore();
 const isTransactionModalOpen = ref(false);
 
 const chartDataIncome = computed(() => {
-  const income = dashboard.transactionsType.income || [];
-  console.log(income);
-  return {
-    labels: income.map((t) => t.categoryName),
-    datasets: [
-      {
-        data: income.map((t) => t.amount / 100),
-        backgroundColor: income.map((t) => t.categoryColor),
-      },
-    ],
-  };
+	const income = dashboard.transactionsType.income || [];
+	console.log(income);
+	return {
+		labels: income.map((t) => t.categoryName),
+		datasets: [
+			{
+				data: income.map((t) => t.amount / 100),
+				backgroundColor: income.map((t) => t.categoryColor),
+			},
+		],
+	};
 });
 
 const chartDataExpense = computed(() => {
-  const expense = dashboard.transactionsType?.expense || [];
-  return {
-    labels: expense.map((t) => t.categoryName),
-    datasets: [
-      {
-        data: expense.map((t) => t.amount / 100),
-        backgroundColor: expense.map((t) => t.categoryColor),
-      },
-    ],
-  };
+	const expense = dashboard.transactionsType?.expense || [];
+	return {
+		labels: expense.map((t) => t.categoryName),
+		datasets: [
+			{
+				data: expense.map((t) => t.amount / 100),
+				backgroundColor: expense.map((t) => t.categoryColor),
+			},
+		],
+	};
 });
 
 const openTransactionModal = () => {
-  isTransactionModalOpen.value = true;
+	isTransactionModalOpen.value = true;
 };
 
 const closeTransactionModal = () => {
-  isTransactionModalOpen.value = false;
+	isTransactionModalOpen.value = false;
 };
 
 async function refreshDashboardData() {
-  const token = await authStore.getToken();
-  await dashboard.fetchDashboardData(token!);
+	await dashboard.fetchDashboardData();
 }
 
 function getIcon(icon: string) {
-  const key = icon as keyof typeof icons;
-  return (icons[key] || icons.List) as any;
+	const key = icon as keyof typeof icons;
+	return (icons[key] || icons.List) as any;
 }
 
 function formatCurrency(value: number) {
-  const toCents = value / 100;
-  return toCents.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  });
+	const toCents = value / 100;
+	return toCents.toLocaleString("pt-BR", {
+		style: "currency",
+		currency: "BRL",
+	});
 }
 
 onMounted(refreshDashboardData);
 
 const options = {
-  responsive: true,
-  maintainAspectRatio: false,
+	responsive: true,
+	maintainAspectRatio: false,
 };
 </script>

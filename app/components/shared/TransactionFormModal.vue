@@ -118,97 +118,89 @@ import { X } from "lucide-vue-next";
 import { ref } from "vue";
 
 const props = defineProps({
-  isOpen: {
-    type: Boolean,
-    default: false,
-  },
-  transactionId: {
-    type: String,
-    default: "",
-  },
+	isOpen: {
+		type: Boolean,
+		default: false,
+	},
+	transactionId: {
+		type: String,
+		default: "",
+	},
 });
 
 const dashboard = useDashboardStore();
-const authStore = useAuthStore();
 
 const emit = defineEmits(["close", "refreshDashboardData"]);
 
 const isSubmitting = ref(false);
 
 const form = ref({
-  type: "expense",
-  amount: 0,
-  description: "",
-  date: new Date().toISOString().split("T")[0],
-  categoryId: "",
-  bankAccountId: "",
+	type: "expense",
+	amount: 0,
+	description: "",
+	date: new Date().toISOString().split("T")[0],
+	categoryId: "",
+	bankAccountId: "",
 });
 
 const transactionTypes = [
-  { value: "expense", label: "Despesa" },
-  { value: "income", label: "Receita" },
+	{ value: "expense", label: "Despesa" },
+	{ value: "income", label: "Receita" },
 ];
 
 const formatted = computed(() => {
-  const value = form.value.amount;
-  if (!value) return "R$ 0,00"
+	const value = form.value.amount;
+	if (!value) return "R$ 0,00";
 
-  const number = Number(value) / 100
-  return new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  }).format(number)
-})
+	const number = Number(value) / 100;
+	return new Intl.NumberFormat("pt-BR", {
+		style: "currency",
+		currency: "BRL",
+	}).format(number);
+});
 
 const onInput = (e: any) => {
-  console.log(e.target.value)
-  const value = e.target.value.replace(/\D/g, "")
-  form.value.amount = Number(value);
-}
-
+	console.log(e.target.value);
+	const value = e.target.value.replace(/\D/g, "");
+	form.value.amount = Number(value);
+};
 
 const closeModal = () => {
-  emit("close");
+	emit("close");
 };
 
 const handleSubmit = async () => {
-  try {
-    if (isSubmitting.value) return;
-    isSubmitting.value = true;
-    const token = await authStore.getToken();
-    const payload = {
-      ...form.value,
-      date: new Date(form.value.date!).toISOString(),
-    };
-    await $fetch("/api/transaction", {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    await dashboard.fetchDashboardData(token!);
-    emit("refreshDashboardData");
-    closeModal();
-    form.value = {
-      type: "expense",
-      amount: 0,
-      description: "",
-      date: new Date().toISOString().split("T")[0],
-      categoryId: "",
-      bankAccountId: "",
-    };
-  } catch (error) {
-    console.error("Error creating transaction:", error);
-  }
+	try {
+		if (isSubmitting.value) return;
+		isSubmitting.value = true;
+		const payload = {
+			...form.value,
+			date: new Date(form.value.date!).toISOString(),
+		};
+		await useApi("/api/transaction", {
+			method: "POST",
+			body: JSON.stringify(payload),
+		});
+		await dashboard.fetchDashboardData();
+		emit("refreshDashboardData");
+		closeModal();
+		form.value = {
+			type: "expense",
+			amount: 0,
+			description: "",
+			date: new Date().toISOString().split("T")[0],
+			categoryId: "",
+			bankAccountId: "",
+		};
+	} catch (error) {
+		console.error("Error creating transaction:", error);
+	}
 
-  isSubmitting.value = false;
+	isSubmitting.value = false;
 };
 
 async function getCategories() {
-  const token = await authStore.getToken();
-  await dashboard.fetchCategories(token!);
+	await dashboard.fetchCategories();
 }
 
 onMounted(getCategories);
