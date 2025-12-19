@@ -1,9 +1,9 @@
-import { createAccount } from "~~/server/db/bankAccount";
+import { createCategory } from "~~/server/db/categories";
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event);
 	const userId = event.context.userId;
-	const category = await createAccount({ ...body, userId });
+	const category = await createCategory({ ...body, userId });
 	return {
 		category,
 	};

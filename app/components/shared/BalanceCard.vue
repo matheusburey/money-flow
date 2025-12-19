@@ -17,29 +17,29 @@
 </template>
 <script lang="ts" setup>
 const props = defineProps({
-  value: {
-    type: Number,
-    default: 0,
-  },
-  icon: {
-    type: Function,
-    required: true,
-  },
-  label: {
-    type: String,
-    required: true,
-  },
-  color: {
-    type: String,
-    required: true,
-  },
+	value: {
+		type: Number,
+		default: 0,
+	},
+	icon: {
+		type: Function,
+		required: true,
+	},
+	label: {
+		type: String,
+		required: true,
+	},
+	color: {
+		type: String,
+		required: true,
+	},
 });
 
 const currencyValue = computed(() => {
-  const toCents = props.value / 100;
-  return toCents.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  });
+	const toCents = props.value / 100;
+	return toCents.toLocaleString("pt-BR", {
+		style: "currency",
+		currency: "BRL",
+	});
 });
 </script>

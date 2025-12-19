@@ -22,17 +22,17 @@
 
 <script lang="ts" setup>
 defineProps({
-  noPadding: {
-    type: Boolean,
-    default: false
-  },
-  noBorder: {
-    type: Boolean,
-    default: false
-  },
-  noOverflow: {
-    type: Boolean,
-    default: false
-  }
+	noPadding: {
+		type: Boolean,
+		default: false,
+	},
+	noBorder: {
+		type: Boolean,
+		default: false,
+	},
+	noOverflow: {
+		type: Boolean,
+		default: false,
+	},
 });
 </script>

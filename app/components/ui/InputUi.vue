@@ -29,28 +29,31 @@
 
 <script lang="ts" setup>
 defineProps({
-  label: {
-    type: String,
-    default: ''
-  },
-  type: {
-    type: String,
-    default: 'text',
-    validator: (value: string) => ['text', 'email', 'password', 'tel', 'number', 'url', 'search'].includes(value)
-  },
-  modelValue: {
-    type: [String, Number],
-    default: ''
-  },
-  error: {
-    type: String,
-    default: ''
-  },
-  hint: {
-    type: String,
-    default: ''
-  }
+	label: {
+		type: String,
+		default: "",
+	},
+	type: {
+		type: String,
+		default: "text",
+		validator: (value: string) =>
+			["text", "email", "password", "tel", "number", "url", "search"].includes(
+				value,
+			),
+	},
+	modelValue: {
+		type: [String, Number],
+		default: "",
+	},
+	error: {
+		type: String,
+		default: "",
+	},
+	hint: {
+		type: String,
+		default: "",
+	},
 });
 
-defineEmits(['update:modelValue']);
+defineEmits(["update:modelValue"]);
 </script>
