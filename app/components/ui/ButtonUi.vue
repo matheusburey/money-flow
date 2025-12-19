@@ -50,50 +50,50 @@ import { Loader } from "lucide-vue-next";
 
 type ButtonType = "button" | "submit" | "reset";
 type ButtonVariant =
-  | "primary"
-  | "secondary"
-  | "outline"
-  | "danger"
-  | "text"
-  | "icon";
+	| "primary"
+	| "secondary"
+	| "outline"
+	| "danger"
+	| "text"
+	| "icon";
 type ButtonSize = "xs" | "sm" | "md" | "lg" | "xl";
 
 defineOptions({
-  name: "ButtonUi",
+	name: "ButtonUi",
 });
 
 defineProps({
-  type: {
-    type: String as PropType<ButtonType>,
-    default: "button",
-    validator: (value: string): value is ButtonType =>
-      ["button", "submit", "reset"].includes(value),
-  },
-  variant: {
-    type: String as PropType<ButtonVariant>,
-    default: "primary",
-    validator: (value: string): value is ButtonVariant =>
-      ["primary", "secondary", "outline", "danger", "text", "icon"].includes(
-        value
-      ),
-  },
-  size: {
-    type: String as PropType<ButtonSize>,
-    default: "md",
-    validator: (value: string): value is ButtonSize =>
-      ["xs", "sm", "md", "lg", "xl"].includes(value),
-  },
-  fullWidth: {
-    type: Boolean,
-    default: false,
-  },
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-  disabled: {
-    type: Boolean,
-    default: false,
-  },
+	type: {
+		type: String as PropType<ButtonType>,
+		default: "button",
+		validator: (value: string): value is ButtonType =>
+			["button", "submit", "reset"].includes(value),
+	},
+	variant: {
+		type: String as PropType<ButtonVariant>,
+		default: "primary",
+		validator: (value: string): value is ButtonVariant =>
+			["primary", "secondary", "outline", "danger", "text", "icon"].includes(
+				value,
+			),
+	},
+	size: {
+		type: String as PropType<ButtonSize>,
+		default: "md",
+		validator: (value: string): value is ButtonSize =>
+			["xs", "sm", "md", "lg", "xl"].includes(value),
+	},
+	fullWidth: {
+		type: Boolean,
+		default: false,
+	},
+	loading: {
+		type: Boolean,
+		default: false,
+	},
+	disabled: {
+		type: Boolean,
+		default: false,
+	},
 } as const);
 </script>

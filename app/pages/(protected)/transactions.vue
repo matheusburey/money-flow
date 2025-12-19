@@ -39,13 +39,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { Plus } from 'lucide-vue-next';
+import { ref } from "vue";
+import { Plus } from "lucide-vue-next";
 
 definePageMeta({
-  title: 'Transações',
-  layout: 'default-layout'
-})
+	title: "Transações",
+	layout: "default-layout",
+});
 
 const dashboard = useDashboardStore();
 const authStore = useAuthStore();
@@ -55,35 +55,35 @@ const isTransactionModalOpen = ref(false);
 import * as icons from "lucide-vue-next";
 
 function formatCurrency(value: number) {
-  const toCents = value / 100;
-  return toCents.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  });
+	const toCents = value / 100;
+	return toCents.toLocaleString("pt-BR", {
+		style: "currency",
+		currency: "BRL",
+	});
 }
 
 function formatDate(dateStr: string) {
-  if (!dateStr) return "";
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("pt-BR");
+	if (!dateStr) return "";
+	const date = new Date(dateStr);
+	return date.toLocaleDateString("pt-BR");
 }
 
 function getIcon(icon: string) {
-  const key = icon as keyof typeof icons;
-  return (icons[key] || icons.List) as any;
+	const key = icon as keyof typeof icons;
+	return (icons[key] || icons.List) as any;
 }
 
 const openTransactionModal = () => {
-  isTransactionModalOpen.value = true;
+	isTransactionModalOpen.value = true;
 };
 
 const closeTransactionModal = () => {
-  isTransactionModalOpen.value = false;
+	isTransactionModalOpen.value = false;
 };
 
 async function refreshDashboardData() {
-  const token = await authStore.getToken();
-  await dashboard.fetchDashboardData(token!);
+	const token = await authStore.getToken();
+	await dashboard.fetchDashboardData(token!);
 }
 
 onMounted(refreshDashboardData);

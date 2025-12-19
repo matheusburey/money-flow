@@ -47,8 +47,8 @@ import { ref } from "vue";
 import { Plus } from "lucide-vue-next";
 
 definePageMeta({
-  title: "Bancos",
-  layout: "default-layout",
+	title: "Bancos",
+	layout: "default-layout",
 });
 
 const authStore = useAuthStore();
@@ -59,29 +59,28 @@ const isTransactionModalOpen = ref(false);
 import * as icons from "lucide-vue-next";
 
 function formatCurrency(value: number, currency: string) {
-  const toCents = value / 100;
-  return toCents.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: currency,
-  });
+	const toCents = value / 100;
+	return toCents.toLocaleString("pt-BR", {
+		style: "currency",
+		currency: currency,
+	});
 }
 
 function getIcon(icon: string) {
-  const key = icon as keyof typeof icons;
-  return (icons[key] || icons.List) as any;
+	const key = icon as keyof typeof icons;
+	return (icons[key] || icons.List) as any;
 }
 
 const openBank = () => {
-  isTransactionModalOpen.value = true;
+	isTransactionModalOpen.value = true;
 };
 
 const closeBank = () => {
-  isTransactionModalOpen.value = false;
+	isTransactionModalOpen.value = false;
 };
 
 async function refreshDashboardData() {
-  const token = await authStore.getToken();
-  await dashboard.fetchBankAccount(token!);
+	await dashboard.fetchBankAccount();
 }
 
 onMounted(refreshDashboardData);

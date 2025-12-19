@@ -18,16 +18,16 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { PanelLeftIcon } from 'lucide-vue-next';
+import { PanelLeftIcon } from "lucide-vue-next";
 
 const url = useRoute();
 function getTitle() {
-  const name = url.name as string;
-  const names: Record<string, string> = {
-    dashboard: "Dashboard",
-    banks: "Bancos",
-    transactions: "Transações",
-  };
-  return names[name] || "Dashboard";
+	const name = url.name as string;
+	const names: Record<string, string> = {
+		dashboard: "Dashboard",
+		banks: "Bancos",
+		transactions: "Transações",
+	};
+	return names[name] || "Dashboard";
 }
 </script>

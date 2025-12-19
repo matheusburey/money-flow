@@ -24,19 +24,19 @@
 
 <script lang="ts" setup>
 defineProps({
-  modelValue: {
-    type: Boolean,
-    default: false
-  },
-  error: {
-    type: String,
-    default: ''
-  },
-  description: {
-    type: String,
-    default: ''
-  }
+	modelValue: {
+		type: Boolean,
+		default: false,
+	},
+	error: {
+		type: String,
+		default: "",
+	},
+	description: {
+		type: String,
+		default: "",
+	},
 });
 
-defineEmits(['update:modelValue']);
+defineEmits(["update:modelValue"]);
 </script>

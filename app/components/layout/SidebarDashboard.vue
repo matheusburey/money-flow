@@ -20,14 +20,14 @@
 import * as icons from "lucide-vue-next";
 
 const links = [
-  { to: "/dashboard", label: "Dashboard", icon: icons.LayoutDashboard },
-  { to: "/banks", label: "Bancos", icon: icons.Landmark },
-  { to: "/transactions", label: "Transações", icon: icons.List },
+	{ to: "/dashboard", label: "Dashboard", icon: icons.LayoutDashboard },
+	{ to: "/banks", label: "Bancos", icon: icons.Landmark },
+	{ to: "/transactions", label: "Transações", icon: icons.List },
 ];
 
 const route = useRoute();
 
 const activeLink = computed(() => {
-  return links.find((link) => link.to === route.path);
+	return links.find((link) => link.to === route.path);
 });
 </script>

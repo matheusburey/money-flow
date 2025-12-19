@@ -102,25 +102,25 @@ const isLoading = ref(false);
 const errors = ref(false);
 
 const handleSignIn = async () => {
-  try {
-    if (!email.value || !password.value) {
-      errors.value = true;
-      toast.error({ title: "Preencha todos os campos" });
-      return;
-    }
+	try {
+		if (!email.value || !password.value) {
+			errors.value = true;
+			toast.error({ title: "Preencha todos os campos" });
+			return;
+		}
 
-    isLoading.value = true;
-    const mensagemError = await authStore.login(email.value, password.value);
-    if (mensagemError) {
-      errors.value = true;
-      toast.error({ title: mensagemError });
-      isLoading.value = false;
-    } else {
-      toast.success({ title: "Login realizado com sucesso!" });
-      await router.push("/dashboard");
-    }
-  } catch (error) {
-    console.error("Error signing in:", error);
-  }
+		isLoading.value = true;
+		const mensagemError = await authStore.login(email.value, password.value);
+		if (mensagemError) {
+			errors.value = true;
+			toast.error({ title: mensagemError });
+			isLoading.value = false;
+		} else {
+			toast.success({ title: "Login realizado com sucesso!" });
+			await router.push("/dashboard");
+		}
+	} catch (error) {
+		console.error("Error signing in:", error);
+	}
 };
 </script>

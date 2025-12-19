@@ -120,14 +120,14 @@ import * as icons from "lucide-vue-next";
 import { ref } from "vue";
 
 const props = defineProps({
-  isOpen: {
-    type: Boolean,
-    default: false,
-  },
-  bankId: {
-    type: String,
-    default: "",
-  },
+	isOpen: {
+		type: Boolean,
+		default: false,
+	},
+	bankId: {
+		type: String,
+		default: "",
+	},
 });
 
 const dashboard = useDashboardStore();
@@ -138,95 +138,109 @@ const emit = defineEmits(["close"]);
 const isSubmitting = ref(false);
 
 const form = ref({
-  name: "",
-  balance: 0,
-  currency: "BRL",
-  icon: "",
-  color: "#808080",
-  include_in_budget: true,
+	name: "",
+	balance: 0,
+	currency: "BRL",
+	icon: "",
+	color: "#808080",
+	include_in_budget: true,
 });
 
 const colorOptions = [
-  "#e11d48", "#dc2626", "#ea580c", "#d97706",
-  "#ca8a04", "#65a30d", "#16a34a", "#059669",
+	"#e11d48",
+	"#dc2626",
+	"#ea580c",
+	"#d97706",
+	"#ca8a04",
+	"#65a30d",
+	"#16a34a",
+	"#059669",
 ];
 
 const iconsOptions = [
-  "Landmark", "CreditCard", "Bitcoin", "Banknote",
-  "Wallet", "PiggyBank", "Euro", "DollarSign",
-  "ChartCandlestick"
+	"Landmark",
+	"CreditCard",
+	"Bitcoin",
+	"Banknote",
+	"Wallet",
+	"PiggyBank",
+	"Euro",
+	"DollarSign",
+	"ChartCandlestick",
 ];
 
 const formattedBalance = computed(() => {
-  const value = form.value.balance;
-  if (!value) return ""
+	const value = form.value.balance;
+	if (!value) return "";
 
-  const number = Number(value) / 100
-  return new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  }).format(number)
-})
+	const number = Number(value) / 100;
+	return new Intl.NumberFormat("pt-BR", {
+		style: "currency",
+		currency: "BRL",
+	}).format(number);
+});
 
 const onBalanceInput = (e: any) => {
-  const value = e.target.value.replace(/\D/g, "")
-  form.value.balance = Number(value);
-}
+	const value = e.target.value.replace(/\D/g, "");
+	form.value.balance = Number(value);
+};
 
 function getIcon(icon: string) {
-  const key = icon as keyof typeof icons;
-  return (icons[key] || icons.List) as any;
+	const key = icon as keyof typeof icons;
+	return (icons[key] || icons.List) as any;
 }
 
 const closeModal = () => {
-  emit("close");
+	emit("close");
 };
 
 const handleSubmit = async () => {
-  try {
-    if (isSubmitting.value) return;
-    isSubmitting.value = true;
-    const token = await authStore.getToken();
-    const payload = { ...form.value };
-    await $fetch("/api/bank-account", {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+	try {
+		if (isSubmitting.value) return;
+		isSubmitting.value = true;
+		const token = await authStore.getToken();
+		const payload = { ...form.value };
+		await $fetch("/api/bank-account", {
+			method: "POST",
+			body: JSON.stringify(payload),
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+		});
 
-    await dashboard.fetchDashboardData(token!);
-    closeModal();
-    // Reset form
-    form.value = {
-      name: "",
-      balance: 0,
-      currency: "BRL",
-      icon: "",
-      color: "#808080",
-      include_in_budget: true,
-    };
-  } catch (error) {
-    console.error("Error saving bank account:", error);
-  }
+		await dashboard.fetchDashboardData(token!);
+		closeModal();
+		// Reset form
+		form.value = {
+			name: "",
+			balance: 0,
+			currency: "BRL",
+			icon: "",
+			color: "#808080",
+			include_in_budget: true,
+		};
+	} catch (error) {
+		console.error("Error saving bank account:", error);
+	}
 
-  isSubmitting.value = false;
+	isSubmitting.value = false;
 };
 
 // Load existing bank data if editing
-watch(() => props.bankId, async (newBankId) => {
-  if (newBankId && props.isOpen) {
-    try {
-      const token = await authStore.getToken();
-      const bankData = await $fetch(`/api/bank-account/${newBankId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+watch(
+	() => props.bankId,
+	async (newBankId) => {
+		if (newBankId && props.isOpen) {
+			try {
+				const token = await authStore.getToken();
+				const bankData = await $fetch(`/api/bank-account/${newBankId}`, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				});
 
-      /* form.value = {
+				/* form.value = {
         name: bankData.name || "",
         balance: bankData.balance || 0,
         currency: bankData.currency || "BRL",
@@ -234,9 +248,11 @@ watch(() => props.bankId, async (newBankId) => {
         color: bankData.color || "#808080",
         include_in_budget: bankData.include_in_budget ?? true,
       }; */
-    } catch (error) {
-      console.error("Error loading bank data:", error);
-    }
-  }
-}, { immediate: true });
+			} catch (error) {
+				console.error("Error loading bank data:", error);
+			}
+		}
+	},
+	{ immediate: true },
+);
 </script>

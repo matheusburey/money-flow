@@ -186,49 +186,49 @@
 
 <script lang="ts" setup>
 import {
-  ChartBarIcon,
-  DollarSign,
-  TrendingUpIcon,
-  CreditCardIcon,
-  ClockIcon,
-  Users,
+	ChartBarIcon,
+	DollarSign,
+	TrendingUpIcon,
+	CreditCardIcon,
+	ClockIcon,
+	Users,
 } from "lucide-vue-next";
 
 const features = [
-  {
-    title: "Acompanhamento em Tempo Real",
-    description:
-      "Monitore suas finanças em tempo real com gráficos e relatórios detalhados.",
-    icon: ClockIcon,
-  },
-  {
-    title: "Orçamento Personalizado",
-    description:
-      "Defina orçamentos por categoria e receba alertas quando estiver perto do limite.",
-    icon: ChartBarIcon,
-  },
-  {
-    title: "Controle de Gastos",
-    description:
-      "Categorize seus gastos e identifique para onde seu dinheiro está indo.",
-    icon: DollarSign,
-  },
-  {
-    title: "Metas Financeiras",
-    description: "Estabeleça e acompanhe metas de economia e investimentos.",
-    icon: TrendingUpIcon,
-  },
-  {
-    title: "Cartões e Contas",
-    description:
-      "Gerencie todos os seus cartões e contas bancárias em um só lugar.",
-    icon: CreditCardIcon,
-  },
-  {
-    title: "Compartilhamento Familiar",
-    description:
-      "Compartilhe suas finanças com familiares para um melhor planejamento em equipe.",
-    icon: Users,
-  },
+	{
+		title: "Acompanhamento em Tempo Real",
+		description:
+			"Monitore suas finanças em tempo real com gráficos e relatórios detalhados.",
+		icon: ClockIcon,
+	},
+	{
+		title: "Orçamento Personalizado",
+		description:
+			"Defina orçamentos por categoria e receba alertas quando estiver perto do limite.",
+		icon: ChartBarIcon,
+	},
+	{
+		title: "Controle de Gastos",
+		description:
+			"Categorize seus gastos e identifique para onde seu dinheiro está indo.",
+		icon: DollarSign,
+	},
+	{
+		title: "Metas Financeiras",
+		description: "Estabeleça e acompanhe metas de economia e investimentos.",
+		icon: TrendingUpIcon,
+	},
+	{
+		title: "Cartões e Contas",
+		description:
+			"Gerencie todos os seus cartões e contas bancárias em um só lugar.",
+		icon: CreditCardIcon,
+	},
+	{
+		title: "Compartilhamento Familiar",
+		description:
+			"Compartilhe suas finanças com familiares para um melhor planejamento em equipe.",
+		icon: Users,
+	},
 ];
 </script>

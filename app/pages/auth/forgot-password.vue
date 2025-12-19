@@ -77,18 +77,18 @@ const isLoading = ref(false);
 const router = useRouter();
 
 const handleSubmit = async () => {
-  try {
-    isLoading.value = true;
-    // TODO: Implement password reset logic
-    console.log("Sending reset email to:", email.value);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    // Redirect to confirmation page or show success message
-    router.push("/auth/reset-password");
-  } catch (error) {
-    console.error("Error sending reset email:", error);
-  } finally {
-    isLoading.value = false;
-  }
+	try {
+		isLoading.value = true;
+		// TODO: Implement password reset logic
+		console.log("Sending reset email to:", email.value);
+		// Simulate API call
+		await new Promise((resolve) => setTimeout(resolve, 1000));
+		// Redirect to confirmation page or show success message
+		router.push("/auth/reset-password");
+	} catch (error) {
+		console.error("Error sending reset email:", error);
+	} finally {
+		isLoading.value = false;
+	}
 };
 </script>
