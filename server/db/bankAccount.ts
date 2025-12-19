@@ -1,4 +1,4 @@
-import type { Prisma, BankAccount } from "@prisma/client";
+import type { BankAccount, Prisma } from "@prisma/client";
 import prisma from "~~/lib/prisma";
 
 export const getAccounts = async (userId: string): Promise<BankAccount[]> => {
@@ -12,6 +12,7 @@ export const getAccounts = async (userId: string): Promise<BankAccount[]> => {
 export const createAccount = async (
 	accountData: Prisma.BankAccountCreateInput,
 ): Promise<BankAccount> => {
+	if (!accountData.icon) accountData.icon = "Landmark";
 	return await prisma.bankAccount.create({
 		data: accountData,
 	});

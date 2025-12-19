@@ -1,4 +1,4 @@
-import type { Prisma, Category } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import prisma from "~~/lib/prisma";
 
 interface ICategory {
@@ -51,7 +51,7 @@ export const createDefaultCategories = async (
 			{
 				name: "Saúde",
 				color: "#FF8A80", // vermelho suave (urgência / saúde)
-				icon: "HealthAndSafety",
+				icon: "HeartPlus",
 				userId,
 				type: "expense",
 			},
